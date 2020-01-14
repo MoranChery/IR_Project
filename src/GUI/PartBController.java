@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * This class controls all the visibility of Part B
+ */
 public class PartBController implements Initializable {
     public TextField selectQueryFilePath;
     public TextField queryVal;
