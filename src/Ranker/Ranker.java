@@ -65,19 +65,33 @@ public class Ranker {
         return avg;
     }
 
+    /**
+     * @param parsedQuery
+     * @param document
+     * @param sortedDict
+     * @param relevantTerms
+     * @param average
+     * @param termAndFrequency
+     * @param numOfDocs
+     * @return
+     */
     private double rankDoc (Document parsedQuery, Document document, Map < String, String > sortedDict,
                             ArrayList < String > relevantTerms, double average,
                             HashMap < String, Integer > termAndFrequency, int numOfDocs)
     {
         double toRet = 0;
         if ( sortedDict != null && !sortedDict.isEmpty()&& termAndFrequency != null && !termAndFrequency.isEmpty()) {
-            //toRet = bm25.rankDoc(parsedQuery, document, sortedDict, relevantTerms,  termAndFrequency, docAndSize);
             toRet = bm25.rankDoc(parsedQuery, document, sortedDict, relevantTerms,  termAndFrequency, average, numOfDocs);
         }
         return toRet;
     }
 
 
+    /**
+     * @param docAndValRank - all the document and there rank
+     * @param size - the number of the documents we want to return
+     * @return sorted document by max rank
+     */
     private ArrayList<String> merge (HashMap < String, Double > docAndValRank ,int size ){
         ArrayList<String> toReturn = null;
         if (docAndValRank != null) {
@@ -102,10 +116,13 @@ public class Ranker {
         return toReturn;
     }
 
+    /**
+     * @param docAndValRank - all the document and there rank
+     * @return ArrayList<String> - term that as mas rank
+     */
     private ArrayList<String> getStringsWithMaxVal (HashMap < String, Double > docAndValRank){
         ArrayList<String> toReturn = null;
         if (docAndValRank != null && !docAndValRank.isEmpty()) {
-
             toReturn = new ArrayList<>();
             ArrayList<String> toRemove = new ArrayList<>();
             double maxVal = findMaxVal(docAndValRank);
@@ -118,11 +135,14 @@ public class Ranker {
             for (int i = 0; i < toRemove.size(); i++) {
                 docAndValRank.remove(toReturn.get(i));
             }
-
         }
         return toReturn;
     }
 
+    /**
+     * @param docAndValRank  - all the document and the rank
+     * @return double - the max value that term rank
+     */
     private double findMaxVal (HashMap < String, Double > docAndValRank){
         double toReturn = 0;
         if (docAndValRank != null && !docAndValRank.isEmpty()) {
