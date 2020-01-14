@@ -13,8 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-
-
+/**
+ *An auxiliary department to create a table of all the queries
+ */
 public class Item {
     private SimpleStringProperty queryTitle ;
     private Button button;
@@ -54,7 +55,10 @@ public class Item {
         return button;
     }
 
-    public void buttonAct(){
+    /**
+     * When you press the button to see all the relevant documents, this function will be activated
+     */
+    private void buttonAct(){
         if(allDocForEachQ!=null &&allDocForEachQ.size()>0) {
             Stage stageAllQueries = new Stage();
             stageAllQueries.setTitle("All Document:");
@@ -78,17 +82,20 @@ public class Item {
             stageAllQueries.show();
         }
         else{
-            showAlert("Sorry, no documents found", "No documents found");
+            showAlert("No documents found");
 
         }
     }
 
 
-    private void showAlert(String  strAlert , String title) {
+    /**
+     * @param title - The title of the error message
+     */
+    private void showAlert(String title) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setGraphic(null);
         alert.setTitle(title);
-        alert.setContentText(strAlert);
+        alert.setContentText("Sorry, no documents found");
         alert.show();
     }
 

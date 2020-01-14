@@ -13,12 +13,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 
+/**
+ * An auxiliary department to create a table of all document
+ */
 public class ItemDoc {
     private SimpleStringProperty docTitle ;
     private Button button;
     IdentifyEntityInDocument identifyEntityInDocument;
-
-
 
     public ItemDoc(String title, String path){
         docTitle = new SimpleStringProperty(title);
@@ -54,6 +55,9 @@ public class ItemDoc {
         return button;
     }
 
+    /**
+     * All documents related to the query will appear
+     */
     public void buttonAct(){
         ArrayList<String[]> entityAndVal = identifyEntityInDocument.getAllEntities(this.docTitle.getValue());
         Stage dictionay = new Stage();

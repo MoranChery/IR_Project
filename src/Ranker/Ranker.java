@@ -4,6 +4,9 @@ import Parse.Document;
 
 import java.util.*;
 
+/**
+ * This class ranks documents according to a particular document or query
+ */
 public class Ranker {
 
     boolean isSemantic;
@@ -17,7 +20,14 @@ public class Ranker {
         bm25 = new BM25(isSemantic);
     }
 
-    //todo
+    /**
+     * @param parsedQuery - Document representing the query
+     * @param sortedDict - The dictionary
+     * @param relevantTerms - The words are relevant if semantics are used
+     * @param allRelevantDocs - All relevant documents
+     * @param size -The amount of documents we want to retrieve
+     * @return ArrayList<String> - Relevant documents
+     */
     public ArrayList<String> rank(Document parsedQuery, ArrayList<Document> allRelevantDocs, int size, Map<String, String> sortedDict, ArrayList<String> relevantTerms) {
         ArrayList<String> toReturn = null;
         if (parsedQuery != null && allRelevantDocs != null && allRelevantDocs.size() > 0) {
@@ -33,6 +43,10 @@ public class Ranker {
         return toReturn;
     }
 
+    /**
+     * @param allRelevantDocs - Term and its rating
+     * @return HashMap<String, Integer>
+     */
     private HashMap<String, Integer> getTermAndFrequency(ArrayList<Document> allRelevantDocs) {
         HashMap<String, Integer> termAndFrequency = null;
         if (allRelevantDocs != null && !allRelevantDocs.isEmpty()) {
@@ -55,6 +69,10 @@ public class Ranker {
         return termAndFrequency;
     }
 
+    /**
+     * @param documents - all the document and there rank
+     * @return double- Average document size
+     */
     private double getDocAvg(List < Document > documents) {
         double avg = 0;
         double sum = 0;
@@ -66,14 +84,14 @@ public class Ranker {
     }
 
     /**
-     * @param parsedQuery
-     * @param document
-     * @param sortedDict
-     * @param relevantTerms
-     * @param average
-     * @param termAndFrequency
-     * @param numOfDocs
-     * @return
+     * @param parsedQuery - Document representing the query
+     * @param document - The document we rank
+     * @param sortedDict - The dictionary
+     * @param relevantTerms - The words are relevant if semantics are used
+     * @param average- Average document size
+     * @param termAndFrequency- All their terms and frequency in corpus
+     * @param numOfDocs - The number of documents that rank them
+     * @return double- the rank
      */
     private double rankDoc (Document parsedQuery, Document document, Map < String, String > sortedDict,
                             ArrayList < String > relevantTerms, double average,

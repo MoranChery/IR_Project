@@ -2,6 +2,9 @@ package GUI;
 
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * Auxiliary class to create a table of 5 entities
+ */
 public class EntityItem {
     private SimpleStringProperty entityName ;
     private SimpleStringProperty tf;

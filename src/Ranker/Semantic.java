@@ -5,6 +5,9 @@ import edu.cmu.lti.lexical_db.NictWordNet;
 import edu.cmu.lti.ws4j.impl.WuPalmer;
 import java.util.ArrayList;
 
+/**
+ * This class finds terms relevant to a set of terms
+ */
 public class Semantic {
     private static ILexicalDatabase db = new NictWordNet();
 

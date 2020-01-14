@@ -48,8 +48,8 @@ class Model extends Observable {
     }
 
     /**
-     * @param postingFilesStringPath
-     * @param selected
+     * @param postingFilesStringPath - String
+     * @param selected - boolean
      * @throws IOException
      */
     void uploadDict(String postingFilesStringPath, boolean selected) throws IOException {
