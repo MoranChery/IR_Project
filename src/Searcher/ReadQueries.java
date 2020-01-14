@@ -47,19 +47,19 @@ public class ReadQueries {
                     allQueries.put(num, text);
                     continue;
                 }
-               // //get query description
-               // if (words.length > 0 && words[0].equals("<desc>")) {
-               //     while (true) {
-               //         line = reader.readLine();
-               //         String[] temp = line.split(" ");
-               //         if (temp.length > 0 && !temp[0].equals("<narr>")) {
-               //             text += line;
-               //             allQueries.replace(num, text);
-               //         }
-               //         else
-               //             break;
-               //     }
-               // }
+                //get query description
+                if (words.length > 0 && words[0].equals("<desc>")) {
+                    while (true) {
+                        line = reader.readLine();
+                        String[] temp = line.split(" ");
+                        if (temp.length > 0 && !temp[0].equals("<narr>")) {
+                            text += line;
+                            allQueries.replace(num, text);
+                        }
+                        else
+                            break;
+                    }
+                }
             }
         }
         catch (Exception e) {

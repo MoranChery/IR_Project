@@ -522,7 +522,12 @@ public class Parse  {
      * @param position
      */
     private void createTerm(Document document, String type, String termName , int position) {
-        Term term = makeTerm(type, termName);
+        Term term;
+        if (type.equals("Entity"))
+            term = makeTerm(type, termName.toUpperCase());
+        else {
+             term = makeTerm(type, termName);
+        }
         if (term != null ) {
             if (allTerms.containsKey(termName)) {
                 term = allTerms.get(termName);
@@ -534,10 +539,19 @@ public class Parse  {
             newTerm[1] = document.getId();
             allTerms.put(termName, term);
             termsAndDocs.add(newTerm);
-            if (type.equals("Entity")|| type.equals("UpLowLetter")) {
+            if (type.equals("Entity")) {
                 char c = termName.charAt(0);
                 if (c >= 'A' && c <= 'Z')
                     document.addEntity(termName);
+                //add each word in the entity as a upLowLetter
+                String[] words = termName.split(" ");
+                for (String word : words) {
+                    Term wordTerm = makeTerm(type, word.toUpperCase());
+                    document.addTerm(wordTerm, position);
+                    newTerm[0] = wordTerm.getTerm();
+                    allTerms.put(word, wordTerm);
+                    termsAndDocs.add(newTerm);
+                }
             }
         }
     }
@@ -623,8 +637,8 @@ public class Parse  {
         else if(date.amIThis(word)){
             iAm = "Date";
         }
-        else if(entity.amIThis(word)){
-            iAm = "Entity";
+        else if(upLowLetter.amIThis(word)){
+            iAm = "UpLowLetter";
         }
         else if(countries.amIThis(word)){
             iAm = "Countries";
@@ -638,9 +652,7 @@ public class Parse  {
         else if(price.amIThis(word)){
             iAm = "Price";
         }
-        else if(upLowLetter.amIThis(word)){
-            iAm = "UpLowLetter";
-        }
+
         return iAm;
     }
 

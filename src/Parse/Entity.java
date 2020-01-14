@@ -32,7 +32,7 @@ public class Entity implements IRules {
      */
     @Override
     public boolean amIThis(String wordone, String wordtwo) {
-        if(amIThis(wordone) && amIThis(wordtwo)){
+        if(wordone.charAt(0) >= 'A' && wordone.charAt(0) <= 'Z' && wordtwo.charAt(0) >= 'A' && wordtwo.charAt(0) <= 'Z'){
             return true;
         }
         return false;
@@ -80,7 +80,9 @@ public class Entity implements IRules {
         Term term = null;
         String[] allWords =word.split(" ");
         if(allWords.length ==1){
-            return null;
+            term = new Term(word ,"Entity" );
+            listOfEntity.add(word);
+            return term;
         }
 
         else if(allWords.length == 2){
