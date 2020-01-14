@@ -236,7 +236,7 @@ public class Parse  {
         writeAllDocuments();
         //writeAllDocsTerms();
         writeAllDocumentsEntities();
-        counter = counter+ allDocs.size();
+        //counter = counter+ allDocs.size();
         allDocs.clear();
     }
 
@@ -544,14 +544,17 @@ public class Parse  {
                 if (c >= 'A' && c <= 'Z')
                     document.addEntity(termName);
                 //add each word in the entity as a upLowLetter
-                String[] words = termName.split(" ");
-                for (String word : words) {
-                    Term wordTerm = makeTerm(type, word.toUpperCase());
-                    document.addTerm(wordTerm, position);
-                    newTerm[0] = wordTerm.getTerm();
-                    allTerms.put(word, wordTerm);
-                    termsAndDocs.add(newTerm);
-                }
+                //String[] words = termName.split(" ");
+                //for (String word : words) {
+                //    Term wordTerm = makeTerm(type, word.toUpperCase());
+                //    if(wordTerm!=null) {          //todo
+                //
+                //        document.addTerm(wordTerm, position);
+                //        newTerm[0] = wordTerm.getTerm();
+                //        allTerms.put(word, wordTerm);
+                //        termsAndDocs.add(newTerm);
+                //    }
+                //}
             }
         }
     }

@@ -77,15 +77,19 @@ public class Searcher {
                     semanticTerms = null;
                 }
                 HashMap<String, ArrayList<Integer>> allPath = getAllPath();
-                System.out.println("done get all path"); //todo delete
+                //System.out.println("done get all path"); //todo delete
                 HashMap<String, Document> allRelevantDocs = getAllRelevantDocs(allPath, allRelevantTerms);
-                System.out.println("done get all relevant docs and tf"); //todo delete
+                //System.out.println("done get all relevant docs and tf"); //todo delete
+                if (isSemantic) {
+                    HashMap<String, ArrayList<Integer>> allPathSemantic = getAllPathForRelevantTerms();
+                    addRelevantTerms(allRelevantDocs, allPathSemantic);
+                }
                 updateAllRelevantDocsDetails(allRelevantDocs);
-                System.out.println("done get all relevant docs details"); //todo delete
+                //System.out.println("done get all relevant docs details"); //todo delete
                 ArrayList<Document> allDocs = new ArrayList<Document>();
                 allDocs.addAll(allRelevantDocs.values());
                 ArrayList<String> relevantDocs = ranker.rank(parsedQuery, allDocs , size, parser.getSortedDict(), semanticTerms);
-                System.out.println("done ranking"); //todo delete
+                //System.out.println("done ranking"); //todo delete
                 results.put(parsedQuery.getId(), relevantDocs);
                 long end = System.currentTimeMillis();
                 totalTime += (end-start);
@@ -99,10 +103,54 @@ public class Searcher {
         }
     }
 
+    private void addRelevantTerms(HashMap<String,Document> allRelevantDocs, HashMap<String, ArrayList<Integer>> allPathSem) {
+        if (allRelevantDocs != null && allRelevantDocs.size() > 0 && allPathSem != null && allPathSem.size() > 0) {
+            for (String file : allPathSem.keySet()) {
+                ArrayList<String> allFileLines = read(file, allPathSem.get(file));
+                for (String line : allFileLines) {
+                    String[] words = line.split(";");
+                    String termName = words[0];
+                    for (int i = 1; i < words.length; i = i + 2) {
+                        Document document;
+                        if (allRelevantDocs.containsKey(words[i])) {
+                            document = allRelevantDocs.get(words[i]);
+                            document.listOfWord.addTermAndTF(termName, Integer.valueOf(words[i + 1]));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public HashMap<String, ArrayList<Integer>> getAllPathForRelevantTerms() {
+        HashMap<String, ArrayList<Integer>> allPostingFilesAndLines = new HashMap<>();
+        if (semanticTerms.size() > 0) {
+            HashMap<String, List<String[]>> pointers = parser.indexer.getPointers();
+            for (String term : semanticTerms) {
+                if (pointers.containsKey(term)) {
+                    for (String[] posting : pointers.get(term)) {
+                        String file = posting[0];
+                        String line = posting[1];
+                        if (allPostingFilesAndLines.containsKey(file)) {
+                            allPostingFilesAndLines.get(file).add(Integer.valueOf(line));
+                        } else {
+                            ArrayList<Integer> lines = new ArrayList<>();
+                            lines.add(Integer.valueOf(line));
+                            allPostingFilesAndLines.put(file, lines);
+                        }
+                    }
+                }
+            }
+        }
+        return allPostingFilesAndLines;
+    }
     private HashMap<String, Document> getAllRelevantDocs(HashMap<String, ArrayList<Integer>> allPath, ArrayList<String> allRelevantTerms) {
-        HashMap<String, Document> allDocs = new HashMap<String, Document>();
+        HashMap<String, Document> allDocs = new HashMap();
         for (String file : allPath.keySet()) {
+            long start = System.currentTimeMillis();
             ArrayList<String> allFileLines = read(file, allPath.get(file));
+            long end = System.currentTimeMillis();
+            //System.out.println((end-start)/1000 + " " +file.toString()); //todo delete
             for (String line : allFileLines) {
                 String[] words = line.split(";");
                 String termName = words[0];
@@ -123,6 +171,7 @@ public class Searcher {
                     }
                 }
             }
+
         }
         return allDocs;
     }

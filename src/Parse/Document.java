@@ -10,6 +10,9 @@ import java.util.HashMap;
 public class Document {
 
     String Id;
+
+
+
     int maxTf;
     int numOfTerms;
     int numOfWords;
@@ -25,6 +28,11 @@ public class Document {
             listOfWord = new DictionaryOfDocument();
             allEntities = new HashMap<>();
         }
+    }
+
+    //todo
+    public int getMaxTf() {
+        return maxTf;
     }
 
     public Document(String word, String word1, String word2, String word3) {

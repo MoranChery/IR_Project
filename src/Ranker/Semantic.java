@@ -1,53 +1,40 @@
 package Ranker;
 
-import Parse.Document;
 import edu.cmu.lti.lexical_db.ILexicalDatabase;
 import edu.cmu.lti.lexical_db.NictWordNet;
 import edu.cmu.lti.ws4j.impl.WuPalmer;
-import edu.cmu.lti.ws4j.util.WS4JConfiguration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TreeMap;
+
 
 public class Semantic {
     private static ILexicalDatabase db = new NictWordNet();
-
-    //find 5 relevant terms synonyms to term
+    // todo
+    //find 2 relevant terms synonyms to term
     public String[] getTheSynonymsForTerm(String term , ArrayList<String> allTermsInCorpus){
         String [] relevantTerms = null;
         if(term!= null && term.length()>0 && allTermsInCorpus!=null && allTermsInCorpus.size()>0){
-            relevantTerms = new String[3];
+            relevantTerms = new String[2];
             double word1 = 0;
-            double word2 = 0;
-            double word3 = 0;
-
-            for (String termRel: allTermsInCorpus) {
+            //double word2 = 0;
+            int i= (int)(allTermsInCorpus.size()*0.1);
+            for (; i<allTermsInCorpus.size() ; i++) {
+                String termRel = allTermsInCorpus.get(i);
                 double myVal =  new WuPalmer(db).calcRelatednessOfWords(term, termRel);
                 if(myVal>word1){
-                    word3 = word2;
-                    word2=word1;
+                    //word2=word1;
                     word1=myVal;
-                    relevantTerms[2] =relevantTerms[1];
-                    relevantTerms[1] =relevantTerms[0];
+                    //relevantTerms[1] =relevantTerms[0];
                     relevantTerms[0]= termRel;
                 }
 
-                else if(myVal>word2){
+                //else if(myVal>word2){
+                //    word2=myVal;
+//
+                //}
 
-                    word3=word2;
-                    word2=myVal;
-                    relevantTerms[2] =relevantTerms[1];
-                    relevantTerms[1] =termRel;
-
-                }
-
-                else if(myVal>word3){
-                    word3 =myVal;
-                    relevantTerms[2] = termRel;
-                }
-
-                if (word1 > 0.9 && word2 > 0.9 && word3 > 0.9 ) {
+                //if (word1 > 0.01 && word2 > 0.01) {
+                if (word1 > 0.1) {
                     break;
                 }
             }
@@ -55,15 +42,16 @@ public class Semantic {
 
         return relevantTerms;
     }
-
+    // todo
     public ArrayList<String> getTheSynonymsForAllTerm(ArrayList<String>terms , ArrayList<String> allTermsInCorpus){
-        ArrayList<String> toReturn= null;
+        ArrayList<String> toReturn= new ArrayList<>();
         if(terms!= null && terms.size()>0 && allTermsInCorpus!=null && allTermsInCorpus.size()>0) {
             for(String term : terms){
                 String [] relevant = getTheSynonymsForTerm(term,allTermsInCorpus);
                 if(relevant!= null && relevant.length>0){
                     for (int i = 0; i<relevant.length; i++)
-                    toReturn.add(relevant[i]);
+                        toReturn.add(relevant[i]);
+
                 }
             }
         }

@@ -22,10 +22,12 @@ public class Ranker {
         ArrayList<String> toReturn = null;
         if (parsedQuery != null && allRelevantDocs != null && allRelevantDocs.size() > 0) {
             HashMap<String, Double> docAndValRank = new HashMap<>();
-            HashMap<String, Integer> documentIdAndSize = getDocAndSize(allRelevantDocs);
+            //HashMap<String, Integer> documentIdAndSize = getDocAndSize(allRelevantDocs);
+            double average = getDocAvg(allRelevantDocs);
             HashMap<String, Integer> termAndFrequency = getTermAndFrequency(allRelevantDocs);
             for (Document document : allRelevantDocs) {
-                    double myRank = rankDoc(parsedQuery, document, sortedDict, relevantTerms, documentIdAndSize, termAndFrequency);
+                    //double myRank = rankDoc(parsedQuery, document, sortedDict, relevantTerms, documentIdAndSize, termAndFrequency);
+                    double myRank = rankDoc(parsedQuery, document, sortedDict, relevantTerms, average, termAndFrequency, allRelevantDocs.size());
                     docAndValRank.put(document.getId(), myRank);
             }
             toReturn = merge(docAndValRank, size);
@@ -38,7 +40,7 @@ public class Ranker {
         if (allRelevantDocs != null && !allRelevantDocs.isEmpty()) {
             termAndFrequency= new HashMap<>();
             for (Document document : allRelevantDocs) {
-                if (isTheDocumentValid(document)) {
+
                     ArrayList<String> termInThisDoc=document.getAllTerms();
                     for (String term : termInThisDoc) {
                         if(termAndFrequency.containsKey(term)){
@@ -46,41 +48,60 @@ public class Ranker {
                             termAndFrequency.replace(term, tf);
                         }
                         else {
-                            termAndFrequency.replace(term, 1);
+                            termAndFrequency.put(term, 1);
                         }
                     }
-                }
+
             }
         }
         return termAndFrequency;
     }
 
-    private HashMap<String, Integer> getDocAndSize (List < Document > documents) {
-        HashMap<String, Integer> documentIdAndSize = null;
-        if (documents != null && !documents.isEmpty()) {
-            documentIdAndSize = new HashMap<>();
-            for (Document document : documents) {
-                if (isTheDocumentValid(document)) {
-                    documentIdAndSize.put(document.getId(), document.getDocumetSize());
-                }
-            }
+    //private HashMap<String, Integer> getDocAndSize (List < Document > documents) {
+    //    HashMap<String, Integer> documentIdAndSize = null;
+    //    if (documents != null && !documents.isEmpty()) {
+    //        documentIdAndSize = new HashMap<>();
+    //        for (Document document : documents) {
+    //            documentIdAndSize.put(document.getId(), document.getDocumetSize());
+    //        }
+    //    }
+    //    return documentIdAndSize;
+    //}
+
+    private double getDocAvg(List < Document > documents) {
+        double avg = 0;
+        double sum = 0;
+        for (Document doc : documents) {
+            sum += doc.getDocumetSize();
         }
-        return documentIdAndSize;
+        avg = sum/documents.size();
+        return avg;
     }
 
 
     //todo
+   // private double rankDoc (Document parsedQuery, Document document, Map < String, String > sortedDict,
+   //                         ArrayList < String > relevantTerms, HashMap < String, Integer > docAndSize,
+   //                         HashMap < String, Integer > termAndFrequency)
+   // {
+   //     double toRet = 0;
+   //     if ( sortedDict != null && !sortedDict.isEmpty()&& termAndFrequency != null && !termAndFrequency.isEmpty()) {
+   //         toRet = bm25.rankDoc(parsedQuery, document, sortedDict, relevantTerms,  termAndFrequency, docAndSize);
+   //     }
+   //     return toRet;
+   // }
+
     private double rankDoc (Document parsedQuery, Document document, Map < String, String > sortedDict,
-                            ArrayList < String > relevantTerms, HashMap < String, Integer > docAndSize,
-                            HashMap < String, Integer > termAndFrequency)
+                            ArrayList < String > relevantTerms, double average,
+                            HashMap < String, Integer > termAndFrequency, int numOfDocs)
     {
         double toRet = 0;
-        if (isTheDocumentValid(document) && isTheDocumentValid(document) && sortedDict != null && !sortedDict.isEmpty() && relevantTerms != null && !relevantTerms.isEmpty() && termAndFrequency != null && !termAndFrequency.isEmpty()) {
-            toRet = bm25.rankDoc(parsedQuery, document, sortedDict, relevantTerms, docAndSize, termAndFrequency);
+        if ( sortedDict != null && !sortedDict.isEmpty()&& termAndFrequency != null && !termAndFrequency.isEmpty()) {
+            //toRet = bm25.rankDoc(parsedQuery, document, sortedDict, relevantTerms,  termAndFrequency, docAndSize);
+            toRet = bm25.rankDoc(parsedQuery, document, sortedDict, relevantTerms,  termAndFrequency, average, numOfDocs);
         }
         return toRet;
     }
-
 
 //    public ArrayList<String> rank(Document query , List<Document> documents, int size, HashMap<String, Integer> tf){
 //        ArrayList<String> toReturn =null;
@@ -104,14 +125,7 @@ public class Ranker {
 //        return toReturn;
 //    }
 
-    private boolean isTheDocumentValid (Document document){
-        if (document != null) {
-            if (document.listOfWord != null && !document.listOfWord.isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     private ArrayList<String> merge (HashMap < String, Double > docAndValRank ,int size ){
         ArrayList<String> toReturn = null;
