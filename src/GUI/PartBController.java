@@ -35,19 +35,31 @@ public class PartBController implements Initializable {
     public CheckBox semantic;
 
 
+    /**
+     * @param location - URL
+     * @param resources - ResourceBundle
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    /**
+     * @param viewModel - initialize ViewModel
+     */
     public void setViewModel(ViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
+    /**
+     * @param posingPath - String
+     */
     public void setPath(String posingPath){
         path = posingPath;
 
     }
-
+    /**
+     * @param actionEvent -ActionEvent
+     */
     public void startFindDoc(ActionEvent actionEvent){
 
             setQuery();
@@ -76,6 +88,9 @@ public class PartBController implements Initializable {
         cleanPath();
     }
 
+    /**
+     * Clear all data preparation for a new run
+     */
     private void cleanPath() {
         selectQueryFilePath.setText("");
         queryVal.setText("");
@@ -86,10 +101,11 @@ public class PartBController implements Initializable {
         stageAllQueries = new Stage();
         saveQuerypath.setText("");
         saveQueryPath ="";
-
-
     }
 
+    /**
+     * View all queries on screen
+     */
     private void showAllQuery()  {
         try {
             TreeMap<String, ArrayList<String>> allDocForEachQ = viewModel.startFindDoc();
@@ -128,6 +144,10 @@ public class PartBController implements Initializable {
         }
     }
 
+    /**
+     * @param strAlert - the error message
+     * @param title- - The title of the error message
+     */
     private void showAlert(String  strAlert , String title) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setGraphic(null);
@@ -136,7 +156,9 @@ public class PartBController implements Initializable {
         alert.show();
     }
 
-
+    /**
+     * @param actionEvent - ActionEvent
+     */
     public void selectQueryFile(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         Stage stage =  (Stage) queryStage.getScene().getWindow() ;
@@ -147,10 +169,16 @@ public class PartBController implements Initializable {
         }
     }
 
+    /**
+     * Initialize query
+     */
     public void setQuery(){
         query = queryVal.getText();
     }
 
+    /**
+     * @param actionEvent -  ActionEvent
+     */
     public void saveQueryRes(ActionEvent actionEvent) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         Stage stage =  (Stage) queryStage.getScene().getWindow() ;
