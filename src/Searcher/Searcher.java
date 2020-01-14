@@ -69,7 +69,7 @@ public class Searcher {
                 ArrayList<String> allRelevantTerms = parsedQuery.listOfWord.getAllTerms();
                 if(isSemantic){
                     ArrayList<String> allTerms = new ArrayList<>();
-                    allTerms.addAll(parser.indexer.getSortedDict().keySet());
+                    //allTerms.addAll(parser.indexer.getSortedDict().keySet());
                     semanticTerms = semantic.getTheSynonymsForAllTerm(parsedQuery.getAllTerms(), allTerms);
                     allRelevantTerms.addAll(semanticTerms);
                 }
@@ -77,19 +77,15 @@ public class Searcher {
                     semanticTerms = null;
                 }
                 HashMap<String, ArrayList<Integer>> allPath = getAllPath();
-                //System.out.println("done get all path"); //todo delete
                 HashMap<String, Document> allRelevantDocs = getAllRelevantDocs(allPath, allRelevantTerms);
-                //System.out.println("done get all relevant docs and tf"); //todo delete
                 if (isSemantic) {
                     HashMap<String, ArrayList<Integer>> allPathSemantic = getAllPathForRelevantTerms();
                     addRelevantTerms(allRelevantDocs, allPathSemantic);
                 }
                 updateAllRelevantDocsDetails(allRelevantDocs);
-                //System.out.println("done get all relevant docs details"); //todo delete
                 ArrayList<Document> allDocs = new ArrayList<Document>();
                 allDocs.addAll(allRelevantDocs.values());
                 ArrayList<String> relevantDocs = ranker.rank(parsedQuery, allDocs , size, parser.getSortedDict(), semanticTerms);
-                //System.out.println("done ranking"); //todo delete
                 results.put(parsedQuery.getId(), relevantDocs);
                 long end = System.currentTimeMillis();
                 totalTime += (end-start);
@@ -98,8 +94,6 @@ public class Searcher {
             System.out.println("Total time is: " + totalTime);
             writeResults(saveQueryPath);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("something went wrong, happy debugging! :)");
         }
     }
 

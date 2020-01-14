@@ -84,6 +84,9 @@ public class PartBController implements Initializable {
         saveQueryPath="";
         selectQueryFilePath.setText("");
         stageAllQueries = new Stage();
+        saveQuerypath.setText("");
+        saveQueryPath ="";
+
 
     }
 

@@ -78,7 +78,6 @@ public class IdentifyEntityInDocument {
             str[0] = entity;
             str[1] = String.valueOf(getScore(allDocEntities.get(entity)));
             ans.add(str);
-            //System.out.println(str[0] + ", " + str[1]);
             count++;
             if (count == 5)
                 break;
