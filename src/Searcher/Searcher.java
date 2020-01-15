@@ -24,6 +24,13 @@ public class Searcher {
     private ArrayList<String> semanticTerms;
 
 
+    /**
+     * Constructor for a query from the text box
+     * @param query
+     * @param parser
+     * @param isSemantic
+     * @param saveQueryPath
+     */
     public Searcher(String query, Parse parser, boolean isSemantic,String saveQueryPath) {
         ranker = new Ranker(isSemantic);
         this.parser = parser;
@@ -38,6 +45,14 @@ public class Searcher {
         }
     }
 
+    /**
+     * Constructor for a file of queries
+     * @param path
+     * @param isSemantic
+     * @param parse
+     * @param isFile
+     * @param saveQueryPath
+     */
     public Searcher(String path, boolean isSemantic, Parse parse, boolean isFile,String saveQueryPath) {
         parser = parse;
         ranker = new Ranker(isSemantic);
@@ -52,6 +67,10 @@ public class Searcher {
         }
     }
 
+    /**
+     * This is the main method of Searcher class
+     * it'S get all the information from the posting files, arrange it, and then send it to the ranker class
+     */
     public void start() {
         try {
             if (reader != null) {
@@ -97,6 +116,11 @@ public class Searcher {
         }
     }
 
+    /**
+     *
+     * @param allRelevantDocs
+     * @param allPathSem
+     */
     private void addRelevantTerms(HashMap<String,Document> allRelevantDocs, HashMap<String, ArrayList<Integer>> allPathSem) {
         if (allRelevantDocs != null && allRelevantDocs.size() > 0 && allPathSem != null && allPathSem.size() > 0) {
             for (String file : allPathSem.keySet()) {
@@ -116,6 +140,10 @@ public class Searcher {
         }
     }
 
+    /**
+     * This method gets all the path to the relevants docs when using semantic algorithm
+     * @return
+     */
     public HashMap<String, ArrayList<Integer>> getAllPathForRelevantTerms() {
         HashMap<String, ArrayList<Integer>> allPostingFilesAndLines = new HashMap<>();
         if (semanticTerms.size() > 0) {
@@ -138,13 +166,18 @@ public class Searcher {
         }
         return allPostingFilesAndLines;
     }
+
+
+    /**
+     * load all the relevant documents terms and tf
+     * @param allPath
+     * @param allRelevantTerms
+     * @return
+     */
     private HashMap<String, Document> getAllRelevantDocs(HashMap<String, ArrayList<Integer>> allPath, ArrayList<String> allRelevantTerms) {
         HashMap<String, Document> allDocs = new HashMap();
         for (String file : allPath.keySet()) {
-            long start = System.currentTimeMillis();
             ArrayList<String> allFileLines = read(file, allPath.get(file));
-            long end = System.currentTimeMillis();
-            //System.out.println((end-start)/1000 + " " +file.toString()); //todo delete
             for (String line : allFileLines) {
                 String[] words = line.split(";");
                 String termName = words[0];
@@ -171,6 +204,10 @@ public class Searcher {
     }
 
 
+    /**
+     * load all the relevant documents details
+     * @param allRelevantDocs
+     */
     private void updateAllRelevantDocsDetails(HashMap<String, Document> allRelevantDocs) {
         HashMap<String, int[]> allDocsDetails = readFile("documentsDetails.txt");
         for (Document doc : allRelevantDocs.values()) {
@@ -181,6 +218,10 @@ public class Searcher {
         }
     }
 
+    /**
+     * get all the path of the relevant documents
+     * @return
+     */
     public HashMap<String, ArrayList<Integer>> getAllPath() {
         HashMap<String, ArrayList<Integer>> allPostingFilesAndLines = new HashMap<>();
         ArrayList<String> allQueryTerms = parsedQuery.getAllTerms();
@@ -206,7 +247,12 @@ public class Searcher {
     }
 
 
-
+    /**
+     * Reads the relevant posting files
+     * @param file
+     * @param lines
+     * @return
+     */
     private ArrayList<String> read(String file, ArrayList<Integer> lines) {
         ArrayList<String> allLines = new ArrayList<>();
         try {
@@ -228,6 +274,11 @@ public class Searcher {
         return allLines;
     }
 
+    /**
+     * This method reads all the documents details from the posting file
+     * @param file
+     * @return
+     */
     private HashMap<String, int[]> readFile(String file) {
         HashMap<String, int[]> allDocsDetails = new HashMap<>();
         try {
@@ -252,6 +303,11 @@ public class Searcher {
     }
 
 
+    /**
+     * This method write all the results to a file
+     * @param saveQueryPath a path to the location where we want to save the results
+     * @throws IOException
+     */
     private void writeResults(String saveQueryPath) throws IOException {
         File resultsFile = new File(saveQueryPath + "\\results.txt");
         FileWriter writer = new FileWriter(resultsFile);
@@ -264,6 +320,9 @@ public class Searcher {
         writer.close();
     }
 
+    /**
+     * return all the queries
+     */
     private void getAllQueries() {
         try {
             reader.readQueries();
@@ -273,10 +332,16 @@ public class Searcher {
         }
     }
 
+    /**
+     * reset the last results
+     */
     public void resetResults() {
         this.results.clear();
     }
 
+    /**
+     * parse all the queries as documents
+     */
     private void parseQueries() {
         if (query != null) {
             parser.startParseDocument("query", query, true);
@@ -287,6 +352,10 @@ public class Searcher {
         }
     }
 
+    /**
+     * return the results
+     * @return
+     */
     public TreeMap<String, ArrayList<String>> getResults() {
         return results;
     }

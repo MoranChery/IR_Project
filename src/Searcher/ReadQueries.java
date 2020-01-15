@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * This class reads all the queries from a file of queries
+ */
 public class ReadQueries {
 
     private HashMap<String, String> allQueries;
@@ -21,10 +24,16 @@ public class ReadQueries {
         return allQueries;
     }
 
+    /**
+     * reset the previous queries stored
+     */
     public void resetReader() {
         allQueries.clear();
     }
 
+    /**
+     * reads all the queries from a file
+     */
     //read all the queries
     public void readQueries(){
         File queries = new File(path);

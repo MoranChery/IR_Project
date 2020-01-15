@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
+/**
+ * This class retrieve and rank all the entities in the relevant documents
+ */
 public class IdentifyEntityInDocument {
 
     private HashMap<String, Integer> allDocEntities;
@@ -17,6 +20,11 @@ public class IdentifyEntityInDocument {
         allDocEntities = new HashMap<>();
     }
 
+    /**
+     * retrieve all the entities of a given doc and rank them
+     * @param docName the doc we want to get his entities
+     * @return top 5 entities in the doc
+     */
     public ArrayList<String[]> getAllEntities(String docName) {
         this.docName = docName;
         File entities = new File(path + "\\documentsEntities.txt");
@@ -37,6 +45,10 @@ public class IdentifyEntityInDocument {
         return getTopEntities();
     }
 
+    /**
+     * store all the entities
+     * @param words
+     */
     private void createAllDocEntities(String[] words) {
         for (int i=1; i<words.length; i++) {
             String[] entity = words[i].split(",");
@@ -45,6 +57,9 @@ public class IdentifyEntityInDocument {
         sortEntities();
     }
 
+    /**
+     * sort the entities by names
+     */
     private void sortEntities() {
         // Create a list from elements of HashMap
         List<Map.Entry<String, Integer> > list =
@@ -63,6 +78,11 @@ public class IdentifyEntityInDocument {
         allDocEntities = sorted;
     }
 
+    /**
+     * rank the entity
+     * @param count
+     * @return
+     */
     private float getScore(int count) {
         if ( max > 0) {
             return (float)count/max;
@@ -70,6 +90,10 @@ public class IdentifyEntityInDocument {
         return count;
     }
 
+    /**
+     * return the top ranked entities
+     * @return
+     */
     public ArrayList<String[]> getTopEntities() {
         ArrayList<String[]> ans = new ArrayList<>();
         int count = 0;
